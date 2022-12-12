@@ -251,15 +251,15 @@
                                             <tbody>
                                                 <tr>
                                                     <th class="col-5" scope="col">Beban Pencemaran</th>
-                                                    <td></td>
+                                                    <td>{{number_format($data_lanjutan['beban_pencemaran'],2)}}</td>
                                                 </tr>
                                                 <tr>
                                                     <th class="col-5" scope="col">Parameter Tidak Memenuhi</th>
-                                                    <td></td>
+                                                    <td>{{$data_lanjutan['parameter_tidak_memenuhi']}}</td>
                                                 </tr>
                                                 <tr>
                                                     <th class="col-5" scope="col">Pemenuhan Baku Mutu</th>
-                                                    <td></td>
+                                                    <td>{{number_format($data_lanjutan['pemenuhan_baku_mutu_persen'],1)}}%</td>
                                                 </tr>
                                             </tbody>
                                         </table>

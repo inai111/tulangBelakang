@@ -31,6 +31,7 @@ class LaporanController extends Controller
     public function laporandetail($id)
     {
         $laporan = Laporan::find($id);
+        $data_lanjutan = $this->getLaporan($laporan);
 
         $batasuji = $this->getBatasUji($id);
         foreach ($batasuji as $key => $value) {
@@ -50,6 +51,7 @@ class LaporanController extends Controller
         $data = [
             'laporan' => $laporan,
             'batasuji' => $batasuji,
+            'data_lanjutan' => $data_lanjutan,
         ];
         return view('detail_laporan', $data);
     }
@@ -278,5 +280,41 @@ class LaporanController extends Controller
         // ]);
     }
 
+    public function getLaporan($lapor)
+    {
+        // harus ada batas_ujinya
+        if($lapor->batasuji){
+            $parameter_memenuhi=count($lapor->batasuji);
+            $tanggal = date('d/m/y',strtotime($lapor->tanggal_sampling));
+            $total_parameter = 0;
+            foreach($lapor->batasuji as $batas_uji){
+                $index_batas_uji = $batas_uji['nama_uji'];
+                $value_batas_uji = (float)$lapor->$index_batas_uji;
+                $total_parameter += $value_batas_uji;
+                // dd((float)$batas_uji->batas_bawah > $value_batas_uji);
+                // cek apakah memenuhi atau tidak
+                if($batas_uji->batas_bawah > $value_batas_uji || $batas_uji->batas_atas < $value_batas_uji){
+                    $parameter_memenuhi-=1;
+                }
+            }
+            $pemenuhan_baku_mutu = $parameter_memenuhi?number_format($parameter_memenuhi/count($lapor->batasuji),3):0;
+            $parameter_tidak_memenuhi = (count($lapor->batasuji)-$parameter_memenuhi);
+            $parameter_tidak_memenuhi = $parameter_tidak_memenuhi?number_format($parameter_memenuhi/count($lapor->batasuji),3):0;
+            $result=[
+                'tanggal'=>$tanggal,
+                'perusahaan_id'=>$lapor->perusahaan_id,
+                'nama_perusahaan'=>$lapor->perusahaan->nib->nama_perusahaan,
+                'laporan_id'=>$lapor->id,
+                'parameter_total_memenuhi'=>$parameter_memenuhi,
+                'beban_pencemaran'=>$total_parameter*$lapor->jmlh_inlet,
+                'parameter_total'=>count($lapor->batasuji),
+                'parameter_tidak_memenuhi'=>count($lapor->batasuji)-$parameter_memenuhi,
+                'pemenuhan_baku_mutu'=>$pemenuhan_baku_mutu,
+                'pemenuhan_baku_mutu_persen'=>$pemenuhan_baku_mutu*100,
+            ];
+                
+        }
+        return $result;
+    }
     
 }
