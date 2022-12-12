@@ -24,10 +24,13 @@
     <link rel="stylesheet" href="{{ asset('template/node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
     <link rel="stylesheet"
         href="{{ asset('template/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
+        <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
 
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{ asset('template/assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('template/assets/css/components.css') }}">
+    <link rel="stylesheet" href="{{ asset('template/assets/css/template.css') }}">
     {{-- Leaflet --}}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
         integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
@@ -79,7 +82,7 @@
                     <div class="sidebar-brand">
                         <a href="index.html">
                             <img class="image" src="{{ asset('template/assets/img/logo_baru.jpg') }}" bordered="0"
-                                width="200px" style="margin: 1px;padding: 0px color:white;"></a>
+                                width="170px" style="margin: 1px;padding: 0px color:white;"></a>
                     </div>
                     <div class="sidebar-brand sidebar-brand-sm">
                         <a href="index.html">
@@ -89,33 +92,42 @@
                     </div>
                     <div class="dropdown-divider"></div>
                     <ul class="sidebar-menu">
-                        <li class="menu-header">Menu Pelaku Usaha</li>
-                        <li><a class="nav-link" href="{{ url('/user') }}"><i class="fas fa-fire"></i>
+                        <li class=" text-center">
+                            <h6 class="nav-link mb-0 pb-0">{{ auth()->user()->nib->nama_perusahaan }}</h6>
+                        </li>
+                        <li class="nav-item {{ Request::is('user')? 'active':'' }}"><a class="nav-link" href="{{ url('/user') }}"><i class="fa fa-home"></i>
                                 <span>Dashboard</span></a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a href="#" class="nav-link has-dropdown"><i class="far fa-user"></i>
-                                <span>Registrasi</span></a>
-                            <ul class="dropdown-menu">
+                        <li class="nav-item {{ Request::is('Profil')? 'active':'' }}"><a class="nav-link" href="{{url('/registrasi-perusahaan/profil') }}"><i class="fa fa-sign-in"></i>
+                            <span>Profil Perusahaan</span></a>
+                    </li>
+                        {{-- <li class="nav-item dropdown">
+                            <a href="{{ url('/registrasi-perusahaan/profil') }}" class="nav-link has-dropdown"><i class="fa fa-sign-in"></i>
+                                <span>Profil Perusahaan</span></a> --}}
+                            {{-- <ul class="dropdown-menu">
                                 <li><a class="nav-link" href="{{ url('/registrasi-perusahaan/profil') }}">Profil</a>
                                 </li>
                                 <li><a class="nav-link"
                                         href="{{ url('/registrasi-perusahaan/formpimpinan') }}">Registrasi
                                         Perusahaan</a></li>
-                            </ul>
+                            </ul> --}}
                         </li>
+                        <li class="nav-item {{ Request::is('laboratorium')? 'active':'' }}"><a class="nav-link" href="{{ url('/laboratorium') }}"><i class="fa fa-flask"></i>
+                            <span>Pengajuan Laboratorium</span></a>
+                    </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link has-dropdown" href="#"><i class="fas fa-pencil-ruler"></i>
+                            <a class="nav-link has-dropdown" href="#"><i class="fa fa-file-text"></i>
                                 <span>Pelaporan</span></a>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="{{ url('/laboratorium') }}">Pengajuan Laboratorium</a>
-                                </li>
+                                <li><a class="nav-link" href="{{ url('/pertek') }}">Input Persetujuan Teknis</a></li>
                                 <li><a class="nav-link" href="{{ url('/laporan') }}">Input Laporan</a></li>
+                                <li><a class="nav-link" href="{{ url('/riwayat') }}">Riwayat Laporan</a></li>
                             </ul>
                         </li>
-                        <li><a class="nav-link" href="{{ url('/riwayat') }}"><i class="fas fa-columns"></i>
-                                <span>Riwayat Laporan</span></a>
+                        <li class="nav-item {{ Request::is('evaluasi')? 'active':'' }}"><a class="nav-link" href="{{ url('/evaluasi') }}"><i class="fa fa-pencil-square-o"></i>
+                                <span>Evaluasi Laporan</span></a>
                         </li>
+
                         {{-- <li class="nav-item dropdown">
                             <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i
                                     class="fas fa-columns"></i> <span>Riwayat Laporan</span></a>
@@ -148,9 +160,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="{{ asset('template/assets/js/stisla.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- JS Libraies -->
-    <script src="{{ asset('template/node_modules/jquery-sparkline/jquery.sparkline.min.js"') }}"></script>
+    {{-- <script src="{{ asset('template/node_modules/jquery-sparkline/jquery.sparkline.min.js"') }}"></script> --}}
     <script src="{{ asset('template/node_modules/jqvmap/dist/jquery.vmap.min.js') }}"></script>
     <script src="{{ asset('template/node_modules/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script>
     <script src="{{ asset('template/node_modules/jqvmap/dist/maps/jquery.vmap.indonesia.js') }}"></script>
@@ -163,9 +176,81 @@
     <script src="{{ asset('template/assets/js/custom.js') }}"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('template/assets/js/page/components-statistic.js') }}"></script>
+    {{-- <script src="{{ asset('template/assets/js/page/components-statistic.js') }}"></script> --}}
     <script src="{{ asset('template/assets/js/page/modules-ion-icons.js') }}"></script>
-    <script src="{{ asset('template/assets/js/page/forms-advanced-forms.js') }}"></script>
+    {{-- <script src="{{ asset('template/assets/js/page/forms-advanced-forms.js') }}"></script> --}}
+    <script src="assets/vendor/chart.js/Chart.min.js"></script>
+    {{-- <script src="assets/js/chart.js"></script> --}}
+    <script src="assets/js/off-canvas.js"></script>
+    <script>
+        let lineChart = document.querySelector(`#lineChart`);
+        let lineChart2 = document.querySelector(`#lineChart2`);
+        if(lineChart && lineChart2)
+        {
+            fetch(`/getlaporan`).then(ee=>ee.json())
+            .then(res=>{
+                console.log(res)
+                if(res.chart){
+                    let labels = new Array();
+                    let dataBebanPencemaran = new Array();
+                    let dataPemenuhanBakuMutu = new Array();
+                    let dataTidakMemenuhi = new Array();
+                    res.chart.forEach(item => {
+                        labels.push(item.tanggal);
+                        dataBebanPencemaran.push(item.beban_pencemaran);
+                        dataPemenuhanBakuMutu.push(item.pemenuhan_baku_mutu_persen);
+                        dataTidakMemenuhi.push(item.parameter_tidak_memenuhi_persen);
+                    });
+                    new Chart(lineChart2, {
+                        type: 'line',
+                        data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Pemenuhan Baku Mutu (%)',
+                            data: dataPemenuhanBakuMutu,
+                            fill:false,
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1
+                        },
+                        // {
+                        //     label: 'Parameter Tidak Memenuhi (%)',
+                        //     data: dataTidakMemenuhi,
+                        // }
+                        ]
+                        },
+                        options: {
+                        scales: {
+                            y: {
+                            beginAtZero: true
+                            }
+                        }
+                        }
+                    });
+                    new Chart(lineChart, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Beban Pencemaran',
+                                data: dataBebanPencemaran,
+                                borderColor: 'rgb(75, 192, 192)',
+                                tension: 0.1,
+                                fill:false
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            })
+        }
+    </script>
+    @stack('script')
 </body>
 
 </html>

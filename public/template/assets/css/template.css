@@ -1,0 +1,24 @@
+
+.sidebar-menu .nav-item .nav-link{
+    color: grey;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 10px;
+    width: 250px;
+    
+    border-radius: 8px;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    transition: all ease-in;
+}
+
+.sidebar-menu .nav-item .nav-link:hover {
+    background: #47c363;
+    transition: all ease-in;
+    color: white;
+}
+
+
+
+

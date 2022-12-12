@@ -16,7 +16,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                     <div class="card card-statistic-1">
                         <div class="card-icon bg-primary">
-                            <i class="far fa-user"></i>
+                            <i class="fa fa-bulding"></i>
                         </div>
                         <div class="card-wrap">
                             <div class="card-header">
@@ -84,7 +84,7 @@
     <script type="text/javascript">
         var locations = [
             @foreach ($perusahaan as $per)
-                ['{{ $per->nama_perusahaan }}', {{ $per->tikor_perusahaan }}],
+                ['{{ $per->nib->nama_perusahaan }}', {{ $per->tikor_perusahaan }}],
             @endforeach
 
         ];

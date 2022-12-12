@@ -69,4 +69,6 @@ class ExportLaporan implements FromQuery, WithHeadings
             'Jumlah BED',
         ];
     }
+
+   
 }

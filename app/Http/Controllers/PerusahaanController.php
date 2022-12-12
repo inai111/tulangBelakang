@@ -7,19 +7,32 @@ use App\Models\Pimpinan;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use App\Models\Perusahaan;
+use App\Models\Pertek;
+use App\Models\AirLimbah;
+use App\Models\Pengolahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\NIB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class PerusahaanController extends Controller
 {
+    public function index()
+    {
+        $pertek = Pertek::all();
+        // return $template;
+            return view('registrasi-pimpinan', compact('pertek'));
+        
+    }
     public function profilperusahaanbaru()
     {
         $user = request()->user();
         $perusahaan = Perusahaan::where('user_id', $user->id)->get();
-        return view('profil', compact('perusahaan'));
+        $pertek = Pertek::where('user_id', $user->id)->get();
+        $airlimbah = AirLimbah::where('user_id', $user->id)->get();
+        return view('profil', compact('perusahaan','pertek', 'airlimbah'));
     }
 
     public function lokasiAdministrasi(Request $request)
@@ -55,10 +68,11 @@ class PerusahaanController extends Controller
     public function profilPimpinan(Request $request)
     {
         $pimpinan = Pimpinan::where('user_id', auth()->user()->id)->first();
-        if (!empty($pimpinan)) {
-            return redirect('registrasi-perusahaan/profil')->with('message', 'Anda telah mengisi form pimpinan dan perusahaan');
-        }
-        return view('registrasi-pimpinan');
+        $pertek = Pertek::all();
+        // if (!empty($pimpinan)) {
+        //     return redirect('registrasi-perusahaan/profil')->with('message', 'Anda telah mengisi form pimpinan dan perusahaan');
+        // }
+        return view('registrasi-pimpinan', $pertek );
     }
     public function postPimpinan(Request $request)
     {
@@ -86,10 +100,12 @@ class PerusahaanController extends Controller
         $kecamatan = Kecamatan::pluck('nama_kecamatan', 'id');
         $kelurahan = Kelurahan::pluck('nama_kelurahan', 'id');
         $bidang = Bidang::pluck('nama_bidang', 'id');
+        $nib = NIB::where('user_id', auth()->user()->id)->first();
         return view('registrasi-perusahaan', [
             'bidang' => $bidang,
             'kecamatan' => $kecamatan,
             'kelurahan' => $kelurahan,
+            'nib' => $nib,
         ]);
     }
     public function postPerusahaan()
@@ -117,8 +133,7 @@ class PerusahaanController extends Controller
             'user_id' => $user->id,
             'pimpinan_id' => $pimpinan->id,
             'status_id' => request('status_id'),
-            'no_izin' => request('no_izin'),
-            'nama_perusahaan' => request('nama_perusahaan'),
+            'nib_id' => auth()->user()->nib->id,
             'alamat_perusahaan' => request('alamat_perusahaan'),
             'kelurahan_id' => request('kelurahan_id'),
             'kecamatan_id' => request('kecamatan_id'),
@@ -135,7 +150,8 @@ class PerusahaanController extends Controller
             'filescan_perusahaan' => $filescan,
             'foto_perusahaan' => $foto,
         ]);
-        return redirect('registrasi-perusahaan/profil');
+        
+        return redirect('registrasi-perusahaan/formpimpinan')->with('status', 'Berhasil registrasi perusahaan ');
     }
 
     public function editPimpinan()
@@ -162,7 +178,6 @@ class PerusahaanController extends Controller
         }
 
         $pimpinan = Pimpinan::where('user_id', auth()->user()->id)->first();
-
         $pimpinan->update([
             'nama_pimpinan' => request('nama_pimpinan'),
             'alamat_pimpinan' => request('alamat_pimpinan'),
@@ -194,7 +209,6 @@ class PerusahaanController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);
         }
-
         if (request()->hasFile('filescan_perusahaan')) {
             $filescan = time() . "_" . request()->filescan_perusahaan->getClientOriginalName();
             request()->filescan_perusahaan->move(public_path('fileperusahaan/'), $filescan);
@@ -207,7 +221,6 @@ class PerusahaanController extends Controller
             $file = public_path('fotoperusahaan/' . $perusahaan->foto_perusahaan);
             File::delete($file);
         }
-
         $perusahaan->update([
             'no_izin' => request('no_izin'),
             'nama_perusahaan' => request('nama_perusahaan'),
@@ -228,5 +241,143 @@ class PerusahaanController extends Controller
             'foto_perusahaan' => $foto,
         ]);
         return redirect('registrasi-perusahaan/profil');
+    }
+
+    public function storePertek(Request $request)
+    {
+        // dd($request->all());
+        $user = request()->user();
+        $pimpinan = DB::table('table_pimpinan')->latest()->first();
+        $validator = Validator::make(request()->all(), [
+            // 'id_perusahaan' =>'required|string|min:1|max:100',
+            'nama_pertek' => 'required|string|min:1|max:100',
+            'tgl_pertek' => 'required|date|min:1|max:100',
+            'no_slo' => 'required|string|min:1|max:100',
+            'tgl_slo' => 'required|date|min:1|max:100',
+            'media_limbah' => 'required|string|min:1|max:100',
+            'no_rekomendasi' => 'required|string|min:1|max:100',
+            // 'lokasi' => 'required|string|min:1|max:100',
+            // 'upload_dokumen' => 'required|max:10240|mimes:pdf',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+        if (request()->hasFile('upload_dokumen')) {
+            $uploddokumen = time() . "_" . request()->upload_dokumen->getClientOriginalName();
+            request()->upload_dokumen->move(public_path('uploaddokumen/'), $uploddokumen);
+        }
+        $pertek=new Pertek;
+        // $pertek->id_perusahaan = $request->input('id_perusahaan');
+        $pertek->user_id = $user->id;
+        $pertek->nama_pertek = $request->nama_pertek;
+        $pertek->tgl_pertek = $request->tgl_pertek;
+        $pertek->no_slo = $request->no_slo;
+        $pertek->tgl_slo = $request->tgl_slo;
+        $pertek->media_limbah = $request->media_limbah;
+        $pertek->no_rekomendasi = $request->no_rekomendasi;
+        $pertek->tikor_perusahaan = $request->tikor_perusahaan;
+        $pertek->tikor_ipal = $request->tikor_ipal;
+        $pertek->tikor_oval = $request->tikor_oval;
+        $pertek->tikor_perusahaan = $request->tikor_perusahaan;
+        $pertek->tikor_pantau = $request->tikor_pantau;
+        // $pertek->tikor_ipal = $perusahaan->tikor_ipal;
+        // $pertek->lokasi = $request->lokasi;
+        // $pertek->upload_dokumen = $request->upload_dokumen;
+
+        if($pertek->save()) {
+            return redirect('/pertek/tambah/airlimbah')->with('status', 'Berhasil menambahkan data informasi umum ');
+        } else {
+            return redirect()->back()->with('status', 'Gagal menambahkan data');
+        }
+    }
+
+    public function editPertek()
+    {
+        $pertek = Pertek::where('user_id', auth()->user()->id)->first();
+        if (empty($pertek)) {
+            return redirect('registrasi-perusahaan/formpimpinan')->with('message', 'Anda BELUM mengisi form registrasi');
+        }
+
+        return view('edit-pertek1', compact('pertek'));
+    }
+    public function updatePertek(Request $request)
+    {
+        $user = request()->user();
+        $validator = Validator::make($request->all(), [
+            'nama_pertek' => 'required',
+            'tgl_pertek' => 'required',
+            'no_slo' => 'required',
+            'tgl_slo' => 'required',
+            'media_limbah' => 'required',
+            'no_rekomendasi' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+        // Laporan::where('id', $id)->update([
+        $pertek = Pertek::where('user_id', auth()->user()->id)->first();
+        $pertek->update([
+            'nama_pertek' => request('nama_pertek'),
+            'tgl_pertek' => request('tgl_pertek'),
+            'no_slo' => request('no_slo'),
+            'tgl_slo' => request('tgl_slo'),
+            'media_limbah' => request('media_limbah'),
+            'no_rekomendasi' => request('no_rekomendasi'),
+            'tikor_perusahaan' => request('tikor_perusahaan'),
+            'tikor_ipal' => request('tikor_ipal'),
+            'tikor_oval' => request('tikor_oval'),
+            'tikor_perusahaan' => request('tikor_perusahaan'),
+            'tikor_pantau' => request('tikor_pantau'),
+        ]);
+        return redirect('/pertek/edit/airlimbah');
+    }
+
+    public function editPertek2()
+    {
+        $airlimbah = AirLimbah::where('user_id', auth()->user()->id)->first();
+        $pengolahan = Pengolahan::pluck('jenis_pengolahan', 'id');
+        if (empty($airlimbah)) {
+            return redirect('/pertek/tambah/airlimbah')->with('message', 'Anda BELUM mengisi form pertek air limbah');
+        }
+
+        return view('edit-pertek2', compact('airlimbah','pengolahan'));
+    }
+
+    public function updatePertek2(Request $request)
+    {
+        $user = request()->user();
+        $validator = Validator::make($request->all(), [
+            'informasi_air' => 'required',
+            'jumlah_airbaku' => 'required',
+            'jumlah_airlimbah' => 'required',
+            'kapasitas_ipal' => 'required',
+            'pengolahan_id' => 'required',
+            'lokasi_pembuangan' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        $airlimbah = AirLimbah::where('user_id', auth()->user()->id)->first();
+        $airlimbah->update([
+            'informasi_air' => request('informasi_air'),
+            'jumlah_airbaku' => request('jumlah_airbaku'),
+            'jumlah_airlimbah' => request('jumlah_airlimbah'),
+            'kapasitas_ipal' => request('kapasitas_ipal'),
+            'pengolahan_id' => request('pengolahan_id'),
+            'lokasi_pembuangan' => request('lokasi_pembuangan'),
+        ]);
+        return redirect('/pertek/edit/bakumutu');
+    }
+
+    public function editPertek3()
+    {
+        $airlimbah = AirLimbah::where('user_id', auth()->user()->id)->first();
+        $pengolahan = Pengolahan::pluck('jenis_pengolahan', 'id');
+        if (empty($airlimbah)) {
+            return redirect('registrasi-perusahaan/formpimpinan')->with('message', 'Anda BELUM mengisi form registrasi');
+        }
+
+        return view('edit-pertek3', compact('airlimbah','pengolahan'));
     }
 }

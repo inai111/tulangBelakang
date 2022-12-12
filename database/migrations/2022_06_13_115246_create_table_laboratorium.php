@@ -20,6 +20,9 @@ class CreateTableLaboratorium extends Migration
             $table->string('alamat_lab');
             $table->string('telf_lab');
             $table->string('email_lab');
+            $table->string('akrelab_id');
+            $table->string('upload_akrelab');
+            $table->enum('status', ['aktif', 'nonaktif'])->default('nonaktif');
             $table->timestamps();
         });
     }

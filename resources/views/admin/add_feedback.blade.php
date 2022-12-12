@@ -145,17 +145,17 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="text-dark">Form Feedback Laporan</h4>
+                            <h4 class="text-dark">Feedback & Tanda Terima Laporan</h4>
                         </div>
                         <div class="card-body">
                             <form action="" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group col">
-                                    <label>Keterangan</label>
+                                    <label>Feedback</label>
                                     <textarea name="deskripsi" class="form-control" required></textarea>
                                 </div>
                                 <div class="form-group col">
-                                    <label>File Lampiran (Pdf,Doc)</label>
+                                    <label>Tanda Terima (Pdf,Doc)</label>
                                     <input name="file_lampiran" type="file" class="form-control">
                                 </div>
                         </div>

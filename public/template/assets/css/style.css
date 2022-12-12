@@ -1,4 +1,20 @@
 @charset "UTF-8";
+input[type="date"] {
+  position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  height: auto;
+  color: transparent;
+  background: transparent;
+}
+
 /**
  * Stisla
  *
@@ -1029,7 +1045,7 @@ table tr:hover .table-links {
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
-  background-color: #6777ef; }
+  background-color: #67efa2; }
 
 .nav-pills .nav-item .nav-link {
   color: #6777ef;
@@ -1955,7 +1971,7 @@ body, html {
   min-height: 100%; }
 
 body {
-  background-color: #f4f6f9;
+  background-color: #c8ffc8;
   font-size: 14px;
   font-weight: 400;
   font-family: "Nunito", "Segoe UI", arial;
@@ -2469,7 +2485,7 @@ pre {
   top: 0;
   height: 100%;
   width: 250px;
-  background-color: #fff;
+  background-color: rgb(255, 255, 255);
   z-index: 880;
   left: 0; }
 

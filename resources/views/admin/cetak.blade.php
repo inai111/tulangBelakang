@@ -15,22 +15,51 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-lg-3">
+                                <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="label">Mulai Tanggal</label>
                                         <input class="form-control " placeholder="Dari Tanggal" type="date"
                                             name="tglawal" id="tglawal">
                                     </div>
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-2">
                                     <div class="form-group">
                                         <label>Sampai Tanggal</label>
                                         <input class="form-control " placeholder="Sampai Tanggal" type="date"
                                             name="tglakhir" id="tglakhir">
                                     </div>
                                 </div>
-                                <div class="col-lg">
+                                <div class="col-lg-3">
                                     <div class="form-group">
+                                        <label>Bidang Perusahaan</label>
+                                        <select id="bidang" name="bidang" class="form-control" class="custom-select">
+                                            <option selected value="all">Semua Bidang</option>
+                                            @foreach ($bidang as $bidang)
+                                                <option <?php if (isset($_GET['bidang'])) {
+                                                    if ($_GET['bidang'] == $bidang->id) {
+                                                        echo "selected='selected'";
+                                                    }
+                                                } ?> value="{{ $bidang->id }}">
+                                                    {{ $bidang->nama_bidang }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label>Lokasi Sampling</label>
+                                        <select id="lokasi" name="lokasi" class="form-control" class="custom-select">
+                                            <option selected value="all">Semua Lokasi</option>
+                                            <option value="Inlet">Inlet</option>
+                                            <option value="Outlet">Outlet</option>
+                                            <option value="Upstream">Upstream</option>
+                                            <option value="Downtream">Downtream</option>
+                                            <option value="Outfall">Outfall</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg">
+                                    <div class="form-group pt-4 mt-1">
                                         <button class="btn btn-success" onclick="laporanView()">Tampilkan</button>
                                     </div>
                                 </div>
@@ -47,7 +76,10 @@
                         <div class="card-header">
                             <h4 class="text-dark">Daftar Laporan</h4>
                             <a class="btn btn-icon btn-success" type="button" href="{{ url('/export') }}"
-                                target="_blank"><i class="fas fa-print"></i>Export Excel</a>
+                                target="_blank"><i class="fas fa-download"></i> Export Excel</a> <br>
+                            <a class="btn btn-icon btn-success mr-2 ml-2" type="button" href="{{ url('/cetak-pdf') }}"
+                                target="_blank"><i class="fas fa-print"></i> Cetak PDF</a>
+
                         </div>
 
                         <div class="card-body">
@@ -60,11 +92,11 @@
                                             <th>Perusahaan</th>
                                             <th>Laboratorium</th>
                                             <th>Nama Petugas</th>
-                                            <th>Jenis Sampling</th>
-                                            <th>Parameter</th>
+                                            <th>Lokasi Sampling</th>
+                                            <th>Jenis Sampel</th>
                                             <th>Tanggal Sampling</th>
-                                            <th>Inlet</th>
-                                            <th>Outlet</th>
+                                            <th>Debit Inlet</th>
+                                            <th>Debit Outlet</th>
                                             <th>Debit Air Baku</th>
                                             <th>pH</th>
                                             <th>Suhu</th>
@@ -98,7 +130,7 @@
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $lap->kode }}</td>
-                                            <td>{{ $lap->perusahaan->nama_perusahaan }}</td>
+                                            <td>{{ $lap->perusahaan->nib->nama_perusahaan }}</td>
                                             <td>{{ $lap->laboratorium->nama_lab }}</td>
                                             <td>{{ $lap->nama_petugas }}</td>
                                             <td>{{ $lap->jenis_sampling }}</td>
@@ -155,10 +187,13 @@
         function laporanView() {
             var awal = $('#tglawal').val();
             var akhir = $('#tglakhir').val();
-            if (awal == '' || awal == null || akhir == '' || akhir == null) {
+            var bidang = $('#bidang').val();
+            var lokasi = $('#lokasi').val();
+            if (awal == '' || awal == null || akhir == '' || akhir == null || bidang == '' || bidang == null || lokasi ==
+                '' || lokasi == null) {
                 Swal.fire('Peringatan!', 'Tanggal tidak lengkap, silahkan lengkapi', 'warning');
             } else {
-                window.open('{{ url('cetak/laporan') }}/' + awal + '/' + akhir, '_self');
+                window.open('{{ url('cetak/laporan') }}/' + awal + '/' + akhir + '/' + bidang + '/' + lokasi, '_self');
             }
 
         }

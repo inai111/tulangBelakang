@@ -10,11 +10,15 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
-                            <h4 class="text-dark">Laporan | {{ $mulai }} - {{ $akhir }}</h4>
+                            <h4 class="text-dark">Laporan Kualitas Air Limbah Tanggal {{ $mulai }} Sampai
+                                {{ $akhir }}</h4>
                             <div>
-                                <button class="btn btn-success" onclick="fnExcelReport()"><i class="fas fa-print"></i>Export
+                                <button class="btn btn-success" onclick="fnExcelReport()"><i class="fas fa-download"></i>Export
                                     Excel</button>
-                            </div>
+                                    {{-- <a href="" onclick="this.href='/cetak-pdffilter/' + document.getElementById('date1').value + '/' + document.getElementById('date2').value + '/' + document.getElementById('bidang').value + '/' + document.getElementById('lokasi').value" target="_blank" class="btn btn-icon btn-success mr-2 ml-2" ><i class="fas fa-print"></i> Cetak PDF</a> --}}
+                                    {{-- <button class="btn btn-success" onclick="fnExcelReport()"><i class="fas fa-print"></i>Cetak PDF</button> --}}
+                                    <a class="btn btn-icon btn-success mr-2 ml-2" type="button" href="/cetak-pdffilter/{{ $mulai }}/{{ $akhir }}/{{ $bidang }}/{{ $lokasi }}" target="_blank"><i class="fas fa-print"></i> Cetak PDF</a>
+                                </div>
 
                         </div>
 
@@ -31,8 +35,8 @@
                                             <th>Jenis Sampling</th>
                                             <th>Parameter</th>
                                             <th>Tanggal Sampling</th>
-                                            <th>Inlet</th>
-                                            <th>Outlet</th>
+                                            <th>Debit Inlet</th>
+                                            <th>Debit Outlet</th>
                                             <th>Debit Air Baku</th>
                                             <th>pH</th>
                                             <th>Suhu</th>
@@ -66,7 +70,7 @@
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $lap->kode }}</td>
-                                            <td>{{ $lap->perusahaan->nama_perusahaan }}</td>
+                                            <td>{{ $lap->perusahaan->nib->nama_perusahaan }}</td>
                                             <td>{{ $lap->laboratorium->nama_lab }}</td>
                                             <td>{{ $lap->nama_petugas }}</td>
                                             <td>{{ $lap->jenis_sampling }}</td>

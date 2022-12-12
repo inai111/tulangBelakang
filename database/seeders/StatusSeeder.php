@@ -22,7 +22,7 @@ class StatusSeeder extends Seeder
                 'status' => 'Disetujui',
             ],
             [
-                'status' => 'Ditolak',
+                'status' => 'Direvisi',
             ],
         ])->each(function ($status) {
             Status::create($status);

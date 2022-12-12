@@ -4,13 +4,13 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Daftar Laboratorium</h1>
+                <h1>Pengajuan Laboratorium</h1>
             </div>
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="text-dark">Daftar Laboratorium</h4>
+                            <h4 class="text-dark">Laboratorium Pengujian yang Digunakan</h4>
                             <button type="button" class="btn btn-success float-right" data-toggle="modal"
                                 data-target="#exampleModal">
                                 <i class="fa fa-plus"></i> Tambah
@@ -24,11 +24,14 @@
                                     <thead class="thead-dark">
                                         <tr>
                                             <th class="text-center sorting_asc">No</th>
-                                            <th>Nama Laboratorium</th>
-                                            <th>Alamat</th>
-                                            <th>No Handphone</th>
-                                            <th>E-Mail</th>
-                                            <th>Action</th>
+                                            <th class="text-center">Nama Laboratorium</th>
+                                            <th class="text-center">Alamat</th>
+                                            <th class="text-center">No Hp</th>
+                                            <th class="text-center">E-Mail</th>
+                                            <th class="text-center">Akreditasi Lab</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Action</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -39,6 +42,14 @@
                                                 <td>{{ $item->alamat_lab }}</td>
                                                 <td>{{ $item->telf_lab }}</td>
                                                 <td>{{ $item->email_lab }}</td>
+                                                <td>{{ $item->akre_lab }}</td>
+                                                @if ($item->status == 'aktif')
+                                                    <td><span class="badge badge-success">{{ $item->status }}</span>
+                                                    </td>
+                                                @elseif ($item->status == 'nonaktif')
+                                                    <td><span class="badge badge-warning">{{ $item->status }}</span>
+                                                    </td>
+                                                @endif
                                                 <td>
                                                     <div class="text center">
                                                         <button type="button" href="#" class="btn btn-primary"
@@ -92,6 +103,21 @@
                             <input name="email_lab" type="email" class="form-control" id="inputEmail4" placeholder="Email"
                                 required>
                         </div>
+                        <div class="form-group">
+                            <label>Akreditasi Lab</label>
+                            <select name="akrelab_id" id="akrelab" class="form-control" required>
+                                <option value="" disabled selected>Pilih Akreditasi</option>
+                                @foreach ($akrelab as $id => $akre_lab)
+                                <option value="{{ $id }}">{{ $akre_lab }}</option>
+                            @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="formFile">Upload Bukti Akreditasi Lab <span> (tidak wajib) </span></label>
+                            <input name="upload_akrelab" type="file" class="form-control">
+                            {{-- value="{{ $item->surat_permohonan }}"> --}}
+                        </div>
+
                 </div>
                 <div class="modal-footer bg-whitesmoke br">
                     <button type="submit" class="btn btn-success">Simpan</button>
@@ -118,8 +144,8 @@
                             @csrf
                             <div class="form-group">
                                 <label>Nama Laboratorium</label>
-                                <input name="nama_lab" type="text" class="form-control" placeholder="Nama Laboratorium"
-                                    value="{{ $item->nama_lab }}" readonly>
+                                <input name="nama_lab" type="text" class="form-control"
+                                    placeholder="Nama Laboratorium" value="{{ $item->nama_lab }}" readonly>
                             </div>
                             <div class="form-group">
                                 <label>Alamat</label>
@@ -168,3 +194,19 @@
         </div>
     @endforeach
 @endsection
+
+@push('script')
+    <script>
+        $(document).ready(function() {
+            @if ($errors->any() || session('gagal'))
+                Swal.fire({
+                    icon: "error",
+                    title: "Gagal Menambahkan",
+                    text: "Data sudah tersedia.",
+                    showConfirmButton: true,
+                    confirmButtonColor: "#47c363",
+                });
+            @endif
+        });
+    </script>
+@endpush

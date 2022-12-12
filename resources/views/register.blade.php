@@ -4,101 +4,125 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>DLH Kota Surakarta&mdash;Register</title>
+    <title>DLH Kota Surakarta-Register</title>
     <link rel="icon" href="{{ asset('template/assets/img/pemkot.png') }}">
-
-    <!-- General CSS Files -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-
-    <!-- CSS Libraries -->
-    <link rel="stylesheet" href="{{ asset('template/node_modules/selectric/public/selectric.css') }}">
-
-    <!-- Template CSS -->
-    <link rel="stylesheet" href="{{ asset('template/assets/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('template/assets/css/components.css') }}">
+    <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/stylelogin2.css" />
 </head>
 
 <body>
-    <div id="app">
-        <section class="section">
-            <div class="container mt-5">
-                <div
-                    class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-3 col-xl-6 offset-xl-3">
+    <div class="container">
+        <div class="forms-container">
+            @if (session('status'))
+                <div class="alert alert-success">
+                    {{ session('status') }}
+                </div>
+            @endif
+            <div class="signin-signup">
+                {{-- <form action="#" class="sign-in-form"> --}}
+                <form method="POST" action="" enctype="multipart/form-data">
+                    @csrf
+                    <img src="template/assets/img/pemkot.png" class="mr-auto my-1 mb-1"
+                        style="width: 60px;height:70px;">
 
+                    <h2 class="title">REGISTRASI</h2>
 
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    <div class="card card-success">
-                        <div class="card-header">
-                            <h3>Register</h3>
-                        </div>
-                        <div class="card-body">
-                            <form method="POST" action="{{ url('/register') }}">
-                                @csrf
-                                <div class="form-group @error('email') is-invalid @enderror">
-                                    <label for="first_name">Nama Pengguna</label>
-                                    <input id="first_name" type="text" class="form-control" name="name" autofocus>
-                                    @error('name')
-                                        <div for="Password" class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-group @error('email') is-invalid @enderror">
-                                    <label for="email">Email</label>
-                                    <input id="email" type="email" class="form-control" name="email">
-                                    @error('email')
-                                        <div for="Password" class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-group @error('password') is-invalid @enderror">
-                                    <label for="password" class="d-block">Password</label>
-                                    <input id="password" type="password" class="form-control pwstrength"
-                                        data-indicator="pwindicator" name="password">
-                                    @error('password')
-                                        <div for="Password" class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-group @error('password konfirmasi') is-invalid @enderror">
-                                    <label for="password">Password Konfirmasi</label>
-                                    <input type="password" class="form-control" id="password_confirmasi"
-                                        name="password_confirmasi">
-                                    @error('password')
-                                        <div for="Password" class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <div class="custom-control custom-checkbox ">
-                                        <input type="checkbox" name="agree" class="custom-control-input"
-                                            id="agree">
-                                        <label class="custom-control-label" for="agree">Saya setuju dengan syarat
-                                            dan ketentuan.</label>
-                                    </div>
-                                </div>
+                    <div class="input-field @error('email') is-invalid @enderror">
+                        <i class="fa fa-industry"></i>
+                        <input type="text" input id="first_name" name="nama_perusahaan" placeholder="Nama Perusahaan"
+                            required>
+                        @error('name')
+                            <div for="Password" class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-success btn-lg btn-block">
-                                        Registrasi
-                                    </button>
-                                    <div class="mt-5 text-muted text-center">
-                                        Sudah Memiliki Akun? <a href="{{ url('/login') }}">Login</a>
-                                    </div>
-                                </div>
-                            </form>
+                    <div class="input-field  @error('email') is-invalid @enderror">
+                        <i class="fa fa-list-ol"></i>
+                        <input type="text" input id="first_name" name="no_izin" placeholder="Nomor Izin (NIB)"
+                            required>
+                        @error('name')
+                            <div for="Password" class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="input-field  @error('email') is-invalid @enderror">
+                        <i class="fas fa-user"></i>
+                        <input type="text" input id="first_name" name="name" placeholder="Nama Pengguna" required>
+                        @error('name')
+                            <div for="Password" class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="input-field @error('email') is-invalid @enderror">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" input id="email" name="email" placeholder="Email" required>
+                        @error('email')
+                            <div for="Password" class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="input-field @error('no_hp') is-invalid @enderror">
+                        <i class="fas fa-phone"></i>
+                        <input type="no_hp" input id="no_hp" name="no_hp" placeholder="No. Hp" required>
+                        @error('no_hp')
+                            <div for="Password" class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="input-field @error('password') is-invalid @enderror">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" input id="password" name="password" placeholder="Password" required>
+                        @error('password')
+                            <div for="Password" class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="input-field @error('password konfirmasi') is-invalid @enderror">
+                        <i class="fa fa-key"></i>
+                        <input type="password" input id="password_confirmasi" name="password_confirmasi"
+                            placeholder="Konfirmasi Password" required>
+                        @error('password')
+                            <div for="Password" class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <div class="custom-checkbox">
+                            <input type="checkbox" name="remember" class="custom-control-input" tabindex="3"
+                                id="remember-me" required>
+                            <label class="custom-control-label" for="remember-me">Saya Setuju Dengan Syarat dan
+                                Ketentuan</label>
                         </div>
                     </div>
-                </div>
-                <div class="simple-footer">
-                    Copyright &copy; DLH SURAKARTA 2022
-                </div>
+                    <input type="submit" class="btn" value="Registrasi" />
+
+                </form>
             </div>
+        </div>
+
+        </form>
     </div>
     </div>
-    </section>
+
+    <div class="panels-container">
+        <div class="panel right-panel">
+            <div class="content">
+                <h3>Daftarkan Perusahaan Anda</h3>
+                <p>
+                    Sudah Memiliki Akun?
+                </p>
+                <button class="btn transparent" id="sign-up-btn">
+                    <a class="nav-link scrollto" href="/login">Masuk</a>
+
+                </button>
+                {{-- <button class="btn transparent" id="sign-in-btn">
+                        Sign in
+                    </button> --}}
+            </div>
+            <img src="assets/img/logoregister.png" class="image" alt="" />
+        </div>
+    </div>
     </div>
 
     <!-- General JS Scripts -->
@@ -116,15 +140,19 @@
 
     <!-- JS Libraies -->
     <script src="{{ asset('template/node_modules/jquery-pwstrength/jquery.pwstrength.min.js') }}"></script>
-    <script src="{{ asset('template/node_modules/jquery-pwstrength/jquery.pwstrength.min.js') }}"></script>')}}
+    <script src="{{ asset('template/node_modules/jquery-pwstrength/jquery.pwstrength.min.js') }}"></script>
     <script src="{{ asset('template/node_modules/selectric/public/jquery.selectric.min.js') }}"></script>
-
     <!-- Template JS File -->
     <script src="{{ asset('template/assets/js/scripts.js') }}"></script>
     <script src="{{ asset('template/assets/js/custom.js') }}"></script>
 
     <!-- Page Specific JS File -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script src="app.js"></script>
     <script src="{{ asset('template/assets/js/page/auth-register.js') }}"></script>
+
 </body>
 
 </html>

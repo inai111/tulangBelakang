@@ -31,14 +31,13 @@
                                     </tbody>
                                     @foreach ($perusahaan as $key => $p)
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $p->nama_perusahaan }}</td>
+                                        <td>{{ $p->nib->nama_perusahaan }}</td>
                                         <td>{{ $p->alamat_perusahaan }}</td>
                                         <td>{{ $p->kelurahan->nama_kelurahan }}</td>
                                         <td>{{ $p->telf_perusahaan }}</td>
                                         <td>
-                                            <a href="{{ url('/download', $p->filescan_perusahaan) }}"><button
-                                                    type="button" class="btn btn-primary btn-sm"><i
-                                                        class="fa fa-download"></i>Download
+                                            <a href="{{ url('/download', $p->filescan_perusahaan) }}"><button type="button"
+                                                    class="btn btn-primary btn-sm"><i class="fa fa-download"></i>Download
                                                 </button></a>
                                         </td>
                                         @if ($p->status_id == 1)
@@ -50,9 +49,9 @@
                                         @endif
                                         <td>
                                             <div class="text-center">
-                                                <button type="button" href="#" class="btn btn-primary"
-                                                    data-toggle="modal" data-target="#detailModal{{ $p->id }}"><i
-                                                        class="fa fa-eye"></i></button>
+                                                <button type="button" href="/admin/perusahaan/detail" class="btn btn-primary">
+                                                    {{-- data-toggle="modal" data-target="#detailModal{{ $p->id }}"> --}}
+                                                    <i class="fa fa-eye"></i></button>
                                                 <button type="button" href="#" class="btn btn-danger"
                                                     data-toggle="modal" data-target="#deleteModal{{ $p->id }}"><i
                                                         class="fa fa-trash"></i></button>
@@ -124,11 +123,11 @@
                                             <tbody>
                                                 <tr>
                                                     <th class="col-5" scope="col">No. Izin Kegiatan Usaha</th>
-                                                    <td>{{ $p->no_izin }}</td>
+                                                    <td>{{ $p->nib->no_izin }}</td>
                                                 </tr>
                                                 <tr>
                                                     <th class="col-5" scope="col">Nama Perusahaan</th>
-                                                    <td>{{ $p->nama_perusahaan }}</td>
+                                                    <td>{{ $p->nib->nama_perusahaan }}</td>
                                                 </tr>
                                                 <tr>
                                                     <th class="col-5" scope="col">Alamat Lengkap</th>
@@ -171,7 +170,7 @@
                                                     <td>{{ $p->tikor_ipal }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th class="col-5" scope="col">Titik Koordinat OUTFAL</th>
+                                                    <th class="col-5" scope="col">Titik Koordinat OUTFALL</th>
                                                     <td>{{ $p->tikor_oval }}</td>
                                                 </tr>
                                                 <tr>
@@ -184,10 +183,36 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="card mb-3" style="max-width: none;">
+                            <div class="row g-0">
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center">Informasi Umum</h5>
+                                        <table class="table table-sm">
+                                            <tbody>
+                                                @foreach ($pertek as $q)
+                                                    <tr>
+                                                        <th class="col-5" scope="col">Jenis Pertek</th>
+                                                        <td>{{ $q->nama_pertek }}</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="col-5" scope="col">Tgl Pertek</th>
+                                                        {{-- <td>{{ $q->tgl_pertek }}</td> --}}
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <a href="/status_setuju/{{ $p->id }}" type="button" class="btn btn-success">Setujui</a>
-                        <a href="/status_tolak/{{ $p->id }}" type="button" class="btn btn-danger">Tolak</a>
+                        <a href="/status_tolak/{{ $p->id }}" type="button" class="btn btn-danger">Revisi</a>
                     </div>
                 </div>
             </div>
